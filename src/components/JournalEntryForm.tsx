@@ -1,4 +1,4 @@
-import { Button, Flex, Text } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 import { ChangeEvent } from 'preact/compat';
 import { useEffect, useState } from 'preact/hooks';
 import db from '../services/idbDriver';
@@ -54,7 +54,6 @@ export const JournalEntryForm = ({
       as="fieldset"
       direction={'column'}
       gap={1}
-      flexGrow={1}
       disabled={chosenEntryDate}
     >
       <Text
@@ -82,11 +81,13 @@ export const JournalEntryForm = ({
         value={text}
         onChange={handleChangeText}
       ></textarea>
-      {!chosenEntryDate && (
-        <button className="btn btn-primary" onClick={addJournalEntry}>
-          Submit
-        </button>
-      )}
+      <Flex direction={'column'} height={50}>
+        {!chosenEntryDate && (
+          <button className="btn btn-primary" onClick={addJournalEntry}>
+            Submit
+          </button>
+        )}
+      </Flex>
     </Flex>
   );
 };

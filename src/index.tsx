@@ -37,7 +37,6 @@ export function App() {
       <div className={'app-container'}>
         <header style={{ paddingInlineStart: '1rem' }}>
           <Heading
-            paddingInlineStart={3}
             as="h1"
             size="xl"
             fontStyle={'italic'}
@@ -83,12 +82,12 @@ export function App() {
               flexDirection: 'column',
               // justifyContent: 'center',
               // // alignContent: 'center',
-              gap: 5,
+              gap: 50,
               paddingInline: 20,
               paddingBlockStart: 16,
             }}
           >
-            <Flex as="form" direction={'column'} gap={3} flexGrow={1}>
+            <Flex as="form" direction={'column'} gap={3} flexGrow={1} justifyContent={'center'}>
               <JournalEntryForm chosenEntryDate={ChosenJournalEntryDate} />
             </Flex>
 

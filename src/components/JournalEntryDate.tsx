@@ -28,7 +28,7 @@ export const JournalEntryDate = ({
       <Button
       style={{
         border: '1px solid transparent',
-        borderColor: journalEntry ? 'green' : 'transparent',
+        borderColor: journalEntry ? 'green' : isToday && !chosenDate? 'gray' : 'transparent',
         borderRight: 'none',
         borderTopRightRadius: 0,
         borderBottomRightRadius: 0,
