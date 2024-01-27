@@ -1,4 +1,4 @@
-import { Flex, Text } from '@chakra-ui/react';
+import { Flex, Text, Textarea } from '@chakra-ui/react';
 import { ChangeEvent } from 'preact/compat';
 import { useEffect, useState } from 'preact/hooks';
 import db from '../services/idbDriver';
@@ -61,7 +61,8 @@ export const JournalEntryForm = ({
         paddingBlockEnd={3}
         as="legend"
         fontSize="sm"
-        color="gray.700"
+        // color="gray.700"
+        color={'gray.500'}
         textAlign="center"
       >
         {date.toLocaleDateString('en-UK', {
@@ -70,7 +71,7 @@ export const JournalEntryForm = ({
           month: 'short',
         })}
       </Text>
-      <textarea
+      <Textarea
         autoFocus={true}
         className={`input-text${chosenEntryDate ? ' submitted' : ''}`}
         placeholder={'Your journal entry here'}
@@ -79,8 +80,9 @@ export const JournalEntryForm = ({
         cols={60}
         rows={10}
         value={text}
+        colorScheme={'red'}
         onChange={handleChangeText}
-      ></textarea>
+      />
       <Flex direction={'column'} height={50}>
         {!chosenEntryDate && (
           <button className="btn btn-primary" onClick={addJournalEntry}>

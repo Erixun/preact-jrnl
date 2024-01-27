@@ -2,10 +2,23 @@ import { render } from 'preact';
 import preactLogo from './assets/preact.svg';
 import './style.css';
 import db from './services/idbDriver';
-import { Button, ChakraProvider, Flex, Heading, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  ChakraProvider,
+  Flex,
+  Heading,
+  Icon,
+  Switch,
+  Text,
+  useColorMode,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import { JournalEntryDate } from './components/JournalEntryDate';
 import { JournalEntryForm } from './components/JournalEntryForm';
 import { useEffect, useState } from 'preact/hooks';
+import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import theme from './theme/theme';
 
 export function App() {
   if (!('indexedDB' in window)) {
@@ -33,18 +46,16 @@ export function App() {
   }, [entryDates]);
 
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <div className={'app-container'}>
-        <header style={{ paddingInlineStart: '1rem' }}>
-          <Heading
-            as="h1"
-            size="xl"
-            fontStyle={'italic'}
-            textAlign={'left'}
-          >
+        <Flex as="header" paddingInlineStart={3} gap={2}>
+          {/* <header style={{ paddingInlineStart: '1rem' }}> */}
+          <Heading as="h1" size="xl" fontStyle={'italic'} textAlign={'left'}>
             jrnl.me
           </Heading>
-        </header>
+          <ButtonToggleColorMode />
+          {/* </header> */}
+        </Flex>
         <main style={{ display: 'flex' }}>
           <aside>
             {/* <Text>
@@ -87,7 +98,13 @@ export function App() {
               paddingBlockStart: 16,
             }}
           >
-            <Flex as="form" direction={'column'} gap={3} flexGrow={1} justifyContent={'center'}>
+            <Flex
+              as="form"
+              direction={'column'}
+              gap={3}
+              flexGrow={1}
+              justifyContent={'center'}
+            >
               <JournalEntryForm chosenEntryDate={ChosenJournalEntryDate} />
             </Flex>
 
@@ -128,11 +145,28 @@ export function App() {
     </ChakraProvider>
   );
 }
-export async function calcCurrentStreak(dates: string[]) {
 
+export function ButtonToggleColorMode() {
+  const { toggleColorMode } = useColorMode();
+  const Icon = useColorModeValue(MoonIcon, SunIcon);
+  const colorScheme = useColorModeValue('blackAlpha', 'gray');
+  return (
+    <Button
+      variant="ghost"
+      colorScheme={colorScheme}
+      marginBottom={-3}
+      aspectRatio={1}
+      onClick={toggleColorMode}
+    >
+      <Icon boxSize={5} />
+    </Button>
+  );
+}
+
+export async function calcCurrentStreak(dates: string[]) {
   let streak = 0;
-  console.log(dates)
-  
+  console.log(dates);
+
   const dbKeys = await db.keys();
   for (const [i, date] of dates.entries()) {
     if (dbKeys.includes(date)) {
