@@ -14,7 +14,10 @@ import {
   useColorMode,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { JournalEntryDate } from './components/JournalEntryDate';
+import {
+  JournalEntryDate,
+  useWindowSizeValue,
+} from './components/JournalEntryDate';
 import { JournalEntryForm } from './components/JournalEntryForm';
 import { useEffect, useState } from 'preact/hooks';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
@@ -45,11 +48,19 @@ export function App() {
     calcCurrentStreak(entryDates).then(setStreak).catch(console.error);
   }, [entryDates]);
 
+  const streakSuffix = useWindowSizeValue(
+    'days',
+    `day streak`
+  );
   return (
     <ChakraProvider theme={theme}>
       <div className={'app-container'}>
-        <Flex as="header" paddingInlineStart={3} gap={2}>
-          {/* <header style={{ paddingInlineStart: '1rem' }}> */}
+        <Flex
+          as="header"
+          paddingInlineStart={3}
+          paddingInlineEnd={useWindowSizeValue(1, 0)}
+          gap={2}
+        >
           <Heading as="h1" size="xl" fontStyle={'italic'} textAlign={'left'}>
             jrnl.me
           </Heading>
@@ -57,12 +68,9 @@ export function App() {
           {/* </header> */}
         </Flex>
         <main style={{ display: 'flex' }}>
-          <aside>
-            {/* <Text>
-            </Text> */}
+          <Box as="aside">
             <Text as="h2" fontSize={'sm'} fontWeight={'normal'}>
-              <strong>{streak}</strong> day streak{streak > 0 && '!'}
-              {/* Entries */}
+              <strong>{streak}</strong> {streakSuffix}{streak > 0 && '!'}
             </Text>
             <div className="journal-entries">
               {entryDates.map((date) => {
@@ -85,7 +93,7 @@ export function App() {
             >
               Show more
             </Button>
-          </aside>
+          </Box>
           <div
             style={{
               display: 'flex',
@@ -94,7 +102,7 @@ export function App() {
               // justifyContent: 'center',
               // // alignContent: 'center',
               gap: 50,
-              paddingInline: 20,
+              paddingInline: useWindowSizeValue('10px 3px', 20),
               paddingBlockStart: 16,
             }}
           >

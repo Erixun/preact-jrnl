@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import db from '../services/idbDriver';
 import { Button } from '@chakra-ui/react';
+import { WIDTH_MOBILE } from '../constants/size';
 
 export const JournalEntryDate = ({
   date,
@@ -23,44 +24,79 @@ export const JournalEntryDate = ({
   const isChosenDate = chosenDate === date;
   const isToday = date === new Date().toLocaleDateString('sv-SE');
 
+  const size = useWindowSize();
+  const style =
+    size && size.width >= WIDTH_MOBILE
+      ? {
+          border: '1px solid transparent',
+          // borderRight: 'unset',
+          borderColor: journalEntry
+            ? 'green'
+            : isToday && !chosenDate
+            ? 'gray'
+            : 'transparent',
+          borderTopRightRadius: 0,
+          borderBottomRightRadius: 0,
+          marginRight: '-2px',
+        }
+      : {
+          border: '1px solid transparent',
+          borderColor: journalEntry
+            ? 'green'
+            : isToday && !chosenDate
+            ? 'gray'
+            : 'transparent',
+          // borderRadius: "50%",
+        };
+
   return (
-    <div className='entry-date'>
+    <div className="entry-date">
       <Button
-      style={{
-        border: '1px solid transparent',
-        borderColor: journalEntry ? 'green' : isToday && !chosenDate? 'gray' : 'transparent',
-        borderRight: 'none',
-        borderTopRightRadius: 0,
-        borderBottomRightRadius: 0,
-        marginRight: '-2px',
-      }}
-      size={'lg'}
-        variant={!journalEntry ? 'ghost' : isChosenDate? 'solid' : 'outline'}
+        style={style}
+        size={'lg'}
+        variant={!journalEntry ? 'ghost' : isChosenDate ? 'solid' : 'outline'}
         colorScheme={journalEntry ? 'green' : 'gray'}
         isDisabled={!journalEntry}
         onClick={() => onClick(date)}
       >
-        <h3 style={{ textDecoration: !journalEntry && !isToday ? 'line-through' : 'none' }}>
-          {date}
+        <h3
+          style={{
+            textDecoration: !journalEntry && !isToday ? 'line-through' : 'none',
+          }}
+        >
+          {size && size.width < WIDTH_MOBILE ? makeShort(date) : date}
         </h3>
       </Button>
     </div>
   );
+};
 
-  {
-    /* <h2>{props.date}</h2>
-      {journalEntry ? (
-        <JournalEntry
-          title={journalEntry.title}
-          text={journalEntry.text}
-          createdAt={journalEntry.createdAt}
-          updatedAt={journalEntry.updatedAt}
-        />
-      ) : (
-        <p>Empty</p>
-      )} */
-  }
-  {
-    /* ); */
-  }
+export const makeShort = (date: string) => {
+  return new Date(date).toLocaleDateString('sv-SE', {
+    month: 'numeric',
+    day: 'numeric',
+  });
+};
+
+export const useWindowSize = () => {
+  const [windowSize, setWindowSize] = useState({
+    width: undefined,
+    height: undefined,
+  });
+  useEffect(() => {
+    const handleResize = () =>
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  return windowSize;
+};
+
+export const useWindowSizeValue = (forMobile: any, forDesktop: any) => {
+  const size = useWindowSize();
+  return size && size.width < WIDTH_MOBILE ? forMobile : forDesktop;
 };

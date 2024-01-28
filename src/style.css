@@ -16,6 +16,7 @@
   --background-light: #f1f1f1;
 
   --bgc: var(--background-light);
+  --mobile-width: 600px;
 
   background-color: var(--bgc);
 }
@@ -90,6 +91,16 @@ aside {
 @media (max-width: 639px) {
   #app {
     /* margin: 2rem; */
+    /* color: red; */
+  }
+  aside {
+    order:1;
+    border: none;
+    padding-inline: 2px;
+
+    & button {
+      aspect-ratio: 1;
+    }
   }
 }
 
