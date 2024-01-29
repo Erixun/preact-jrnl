@@ -5,6 +5,7 @@ import db from './services/idbDriver';
 import {
   Box,
   Button,
+  ButtonGroup,
   ChakraProvider,
   Flex,
   Heading,
@@ -20,7 +21,7 @@ import {
 } from './components/JournalEntryDate';
 import { JournalEntryForm } from './components/JournalEntryForm';
 import { useEffect, useState } from 'preact/hooks';
-import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import { MoonIcon, SunIcon, HamburgerIcon } from '@chakra-ui/icons';
 import theme from './theme/theme';
 
 export function App() {
@@ -40,6 +41,8 @@ export function App() {
   const [entryDates, setEntryDates] = useState([]); // ['2021-08-01', '2021-08-02'
   const [streak, setStreak] = useState(0);
 
+  const [showEntries, setShowEntries] = useState(false);
+
   useEffect(() => {
     generateDateStringsFromDaysAgo(50).then(setEntryDates).catch(console.error);
   }, []);
@@ -48,10 +51,7 @@ export function App() {
     calcCurrentStreak(entryDates).then(setStreak).catch(console.error);
   }, [entryDates]);
 
-  const streakSuffix = useWindowSizeValue(
-    'days',
-    `day streak`
-  );
+  const streakSuffix = useWindowSizeValue('days', `day streak`);
   return (
     <ChakraProvider theme={theme}>
       <div className={'app-container'}>
@@ -64,36 +64,41 @@ export function App() {
           <Heading as="h1" size="xl" fontStyle={'italic'} textAlign={'left'}>
             jrnl.me
           </Heading>
-          <ButtonToggleColorMode />
+          <ButtonGroup>
+            <ButtonToggleColorMode />
+            {/* TODO: ButtonShowEntries */}
+            <Button
+              variant="ghost"
+              aspectRatio={1}
+              marginBottom={-2}
+              marginInline={1}
+              onClick={() => setShowEntries(!showEntries)}
+            >
+              <HamburgerIcon boxSize={6} />
+            </Button>
+          </ButtonGroup>
           {/* </header> */}
         </Flex>
         <main style={{ display: 'flex' }}>
-          <Box as="aside">
-            <Text as="h2" fontSize={'sm'} fontWeight={'normal'}>
-              <strong>{streak}</strong> {streakSuffix}{streak > 0 && '!'}
-            </Text>
-            <div className="journal-entries">
-              {entryDates.map((date) => {
-                return (
-                  <JournalEntryDate
-                    date={date}
-                    chosenDate={ChosenJournalEntryDate}
-                    onClick={handleSetChosenJournalEntryDate}
-                  />
-                );
-              })}
-            </div>
-            <Button
-              size={'sm'}
-              onClick={() => {
-                console.log('Show more not implemented yet');
-                // setJournalEntry('test');
-              }}
-              variant={'ghost'}
-            >
-              Show more
-            </Button>
-          </Box>
+          {showEntries && (
+            <Box as="aside">
+              <Text as="h2" fontSize={'sm'} fontWeight={'normal'}>
+                <strong>{streak}</strong> {streakSuffix}
+                {streak > 0 && '!'}
+              </Text>
+              <div className="journal-entries">
+                {entryDates.map((date) => {
+                  return (
+                    <JournalEntryDate
+                      date={date}
+                      chosenDate={ChosenJournalEntryDate}
+                      onClick={handleSetChosenJournalEntryDate}
+                    />
+                  );
+                })}
+              </div>
+            </Box>
+          )}
           <div
             style={{
               display: 'flex',
@@ -102,7 +107,7 @@ export function App() {
               // justifyContent: 'center',
               // // alignContent: 'center',
               gap: 50,
-              paddingInline: useWindowSizeValue('10px 3px', 20),
+              paddingInline: useWindowSizeValue(5, 20),
               paddingBlockStart: 16,
             }}
           >
