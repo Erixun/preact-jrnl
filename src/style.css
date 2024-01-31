@@ -29,6 +29,7 @@ body {
 
 #app {
   height: 100vh;
+  height: 100dvh;
   max-width: 1480px;
   max-height: 100vh;
   max-height: 100dvh;
