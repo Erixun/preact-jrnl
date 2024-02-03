@@ -9,8 +9,6 @@ import {
   ChakraProvider,
   Flex,
   Heading,
-  Icon,
-  Switch,
   Text,
   useColorMode,
   useColorModeValue,
@@ -44,6 +42,11 @@ export function App() {
   const [showEntries, setShowEntries] = useState(false);
 
   useEffect(() => {
+    const today = new Date().toLocaleDateString('sv-SE');
+    db.get(today).then((value) => {
+      if (!value) return;
+      setChosenJournalEntryDate(today);
+    });
     generateDateStringsFromDaysAgo(50).then(setEntryDates).catch(console.error);
   }, []);
 
@@ -113,12 +116,16 @@ export function App() {
           >
             <Flex
               as="form"
+              onSubmit={(e) => e.preventDefault()}
               direction={'column'}
               gap={3}
               flexGrow={1}
               justifyContent={'center'}
             >
-              <JournalEntryForm chosenEntryDate={ChosenJournalEntryDate} />
+              <JournalEntryForm
+                chosenEntryDate={ChosenJournalEntryDate}
+                setChosenEntryDate={setChosenJournalEntryDate}
+              />
             </Flex>
 
             <footer>

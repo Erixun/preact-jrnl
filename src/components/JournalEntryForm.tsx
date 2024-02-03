@@ -1,12 +1,14 @@
 import { Flex, Text, Textarea } from '@chakra-ui/react';
 import { ChangeEvent } from 'preact/compat';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import db from '../services/idbDriver';
 
 export const JournalEntryForm = ({
   chosenEntryDate,
+  setChosenEntryDate
 }: {
   chosenEntryDate: string;
+  setChosenEntryDate: (date: string) => void;
 }) => {
   const [title, setTitle] = useState(
     `Journal entry - ${
@@ -29,6 +31,8 @@ export const JournalEntryForm = ({
 
   const addJournalEntry = () => {
     setJournalEntry(text);
+    const today = new Date().toLocaleDateString('sv-SE');
+    setChosenEntryDate(today);
     setText('');
   };
 
@@ -44,18 +48,23 @@ export const JournalEntryForm = ({
     };
   }, [chosenEntryDate]);
 
+  const textareaRef = useAutosizeTextArea(text); //useRef<HTMLTextAreaElement>(null);
+
+  // useEffect(() => {
+  //   const scrollHeight = textareaRef.current?.scrollHeight;
+  //   const height = textareaRef.current?.clientHeight;
+  //   if (textareaRef && textareaRef.current) {
+  //     textareaRef.current.style.height = textareaRef.current.scrollHeight + 10 + 'px';
+  //   }
+  // }, [textareaRef.current?.scrollHeight]);
+
   //TODO: if today has an entry, show it
 
   //TODO: enable editing of existing entries
 
   const date = chosenEntryDate ? new Date(chosenEntryDate) : new Date();
   return (
-    <Flex
-      as="fieldset"
-      direction={'column'}
-      gap={1}
-      disabled={chosenEntryDate}
-    >
+    <Flex as="fieldset" direction={'column'} gap={1} disabled={chosenEntryDate}>
       <Text
         paddingInline={15}
         paddingBlockEnd={3}
@@ -72,20 +81,30 @@ export const JournalEntryForm = ({
         })}
       </Text>
       <Textarea
+        ref={textareaRef}
         autoFocus={true}
         className={`input-text${chosenEntryDate ? ' submitted' : ''}`}
         placeholder={'Your journal entry here'}
         name=""
         id=""
+        _disabled={{ opacity: 1 }}
         cols={60}
-        rows={10}
+        // rows={10}
+        minHeight={200}
+        resize={'none'}
+        overflow={'hidden'}
         value={text}
         colorScheme={'red'}
         onChange={handleChangeText}
       />
       <Flex direction={'column'} height={50}>
         {!chosenEntryDate && (
-          <button className="btn btn-primary" onClick={addJournalEntry}>
+          <button
+            disabled={text.length < 10}
+            style={{ opacity: text.length < 10 ? 0.5 : 1 }}
+            className="btn btn-primary"
+            onClick={addJournalEntry}
+          >
             Submit
           </button>
         )}
@@ -93,6 +112,18 @@ export const JournalEntryForm = ({
     </Flex>
   );
 };
+
+function useAutosizeTextArea(value: string) {
+  const ref = useRef<HTMLTextAreaElement>();
+
+  useEffect(() => {
+    if (!ref.current) return;
+    ref.current.style.height = 'auto';
+    ref.current.style.height = `${ref.current.scrollHeight + 10}px`;
+  }, [value]);
+
+  return ref;
+}
 
 function setJournalEntry(text: string) {
   const date = new Date();

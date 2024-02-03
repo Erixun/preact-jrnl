@@ -95,7 +95,7 @@ aside {
     /* color: red; */
   }
   aside {
-    order:1;
+    order: 1;
     border: none;
     padding-inline: 2px;
 
@@ -115,10 +115,8 @@ aside {
 }
 
 textarea {
-  /* flex-grow: 1; */
   border-radius: 6px;
-  /* background-color: #f8f8f8; */
-  border:1px solid var(--chakra-colors-gray-300);
+  border: 1px solid var(--chakra-colors-gray-300);
 }
 .input-text {
   padding: 10px 15px;
