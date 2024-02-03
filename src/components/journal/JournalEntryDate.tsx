@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'preact/hooks';
-import db from '../services/idbDriver';
+import db from '../../services/idbDriver';
 import { Button } from '@chakra-ui/react';
-import { WIDTH_MOBILE } from '../constants/size';
-
+import { WIDTH_MOBILE } from '../../constants/size';
+import { useWindowSize } from '@/hooks/useWindowSize';
+import { makeShort } from '@/utils/makeShort';
 export const JournalEntryDate = ({
   date,
   chosenDate,
@@ -29,7 +30,6 @@ export const JournalEntryDate = ({
     size && size.width >= WIDTH_MOBILE
       ? {
           border: '1px solid transparent',
-          // borderRight: 'unset',
           borderColor: journalEntry
             ? 'green'
             : isToday && !chosenDate
@@ -46,7 +46,6 @@ export const JournalEntryDate = ({
             : isToday && !chosenDate
             ? 'gray'
             : 'transparent',
-          // borderRadius: "50%",
         };
 
   return (
@@ -69,34 +68,4 @@ export const JournalEntryDate = ({
       </Button>
     </div>
   );
-};
-
-export const makeShort = (date: string) => {
-  return new Date(date).toLocaleDateString('sv-SE', {
-    month: 'numeric',
-    day: 'numeric',
-  });
-};
-
-export const useWindowSize = () => {
-  const [windowSize, setWindowSize] = useState({
-    width: undefined,
-    height: undefined,
-  });
-  useEffect(() => {
-    const handleResize = () =>
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-  return windowSize;
-};
-
-export const useWindowSizeValue = (forMobile: any, forDesktop: any) => {
-  const size = useWindowSize();
-  return size && size.width < WIDTH_MOBILE ? forMobile : forDesktop;
 };

@@ -38,13 +38,6 @@ body {
   text-align: center;
 }
 
-.app-container {
-  height: inherit;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  overflow: hidden;
-}
-
 header {
   padding-bottom: 0.5rem;
   display: flex;
@@ -79,9 +72,7 @@ aside {
     padding-block: 14.5px;
     background: var(--chakra-colors-chakra-body-bg);
   }
-  /* & * {
-    background: var(--bgc);
-  } */
+
   .journal-entries {
     display: flex;
     flex-direction: column;
@@ -90,10 +81,6 @@ aside {
 }
 
 @media (max-width: 639px) {
-  #app {
-    /* margin: 2rem; */
-    /* color: red; */
-  }
   aside {
     order: 1;
     border: none;
@@ -109,7 +96,6 @@ aside {
   :root {
     color: #ccc;
     --bgc: var(--background-dark);
-    /* background-color: var(--background-dark); */
     --primary-blue: #2e55e3;
   }
 }
@@ -139,7 +125,6 @@ textarea {
   background-color: #3858cb;
   color: #fff;
   border-radius: 6px;
-  /* outline: 2px solid #3858cb; */
 }
 
 footer {
